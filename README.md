@@ -34,7 +34,13 @@ client/                 Vite + React static site
   public/_redirects     Render SPA fallback
 server/                 Express + Mongoose web service
   src/index.js          Backend entry point
+render.yaml             Optional Render Blueprint for both services
 ```
+
+The Render error `ENOENT ... /opt/render/project/src/package.json` means the
+service was created with the repository root as its root directory. Either use
+the root directories and commands below, or create both services from
+`render.yaml`.
 
 ### Render frontend (Static Site)
 
@@ -42,6 +48,9 @@ server/                 Express + Mongoose web service
 - Build command: `npm install && npm run build`
 - Publish directory: `dist`
 - Environment variable: `VITE_API_URL=https://<your-backend>.onrender.com/api`
+
+In the Render dashboard, set **Root Directory** to `client`. Do not use the
+repository root for this service.
 
 ### Render backend (Web Service)
 
@@ -52,6 +61,9 @@ server/                 Express + Mongoose web service
   - `MONGO_URI=mongodb+srv://USERNAME:PASSWORD@CLUSTER_URL/CivicConnect`
   - `JWT_SECRET=<long-random-secret>`
   - `CLIENT_URL=https://<your-frontend>.onrender.com`
+
+In the Render dashboard, set **Root Directory** to `server`. Do not use the
+repository root for this service.
 
 `CLIENT_URL` may contain a comma-separated list when multiple frontend origins
 must be allowed. The MongoDB Atlas user must have access to the
