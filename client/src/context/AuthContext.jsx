@@ -7,7 +7,13 @@ export function AuthProvider({ children }) {
 	const [token, setToken] = useState(() => localStorage.getItem("cc_token") || "");
 	const [user, setUser] = useState(() => {
 		const raw = localStorage.getItem("cc_user");
-		return raw ? JSON.parse(raw) : null;
+		if (!raw) return null;
+		try {
+			return JSON.parse(raw);
+		} catch {
+			localStorage.removeItem("cc_user");
+			return null;
+		}
 	});
 
 	useEffect(() => {
@@ -27,8 +33,8 @@ export function AuthProvider({ children }) {
 		return data;
 	};
 
-	const register = async (name, email, password, role) => {
-		const { data } = await api.post("/auth/register", { name, email, password, role });
+	const register = async (name, email, password) => {
+		const { data } = await api.post("/auth/register", { name, email, password });
 		setToken(data.token);
 		setUser(data.user);
 		return data;
@@ -47,5 +53,4 @@ export function AuthProvider({ children }) {
 export function useAuth() {
 	return useContext(AuthContext);
 }
-
 

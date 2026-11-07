@@ -4,16 +4,16 @@ import { useAuth } from "../context/AuthContext.jsx";
 
 export default function AuthPage() {
 	const [isRegister, setIsRegister] = useState(false);
-	const [form, setForm] = useState({ name: "", email: "", password: "", role: "user" });
+	const [form, setForm] = useState({ name: "", email: "", password: "" });
 	const { login, register } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const from = location.state?.from?.pathname || "/Home";
+	const from = location.state?.from?.pathname || "/";
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			if (isRegister) await register(form.name, form.email, form.password, form.role);
+			if (isRegister) await register(form.name, form.email, form.password);
 			else await login(form.email, form.password);
 			navigate(from, { replace: true });
 		} catch (err) {
@@ -67,16 +67,6 @@ export default function AuthPage() {
 						onChange={(e) => setForm({ ...form, password: e.target.value })}
 						required
 					/>
-					{isRegister && (
-						<select
-							className="select select-bordered w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200"
-							value={form.role}
-							onChange={(e) => setForm({ ...form, role: e.target.value })}
-						>
-							<option value="user">User</option>
-							<option value="admin">Admin</option>
-						</select>
-					)}
 					<button className="btn w-full bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300">
 						{isRegister ? "Create Account" : "Login"}
 					</button>

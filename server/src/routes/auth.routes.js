@@ -11,13 +11,13 @@ const generateToken = (userId) => {
 // POST /api/auth/register
 router.post("/register", async (req, res) => {
 	try {
-		const { name, email, password, role } = req.body;
+		const { name, email, password } = req.body;
 		if (!name || !email || !password) {
 			return res.status(400).json({ message: "Name, email and password are required" });
 		}
 		const existing = await User.findOne({ email });
 		if (existing) return res.status(400).json({ message: "Email already registered" });
-		const user = await User.create({ name, email, password, role: role === "admin" ? "admin" : "user" });
+		const user = await User.create({ name, email, password, role: "user" });
 		const token = generateToken(user._id);
 		res.status(201).json({
 			user: { id: user._id, name: user.name, email: user.email, role: user.role },
@@ -44,5 +44,4 @@ router.post("/login", async (req, res) => {
 });
 
 export default router;
-
 
