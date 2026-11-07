@@ -53,7 +53,13 @@ router.post("/", protect, async (req, res) => {
 			description,
 			category,
 			location,
-			...(latitude && longitude && { latitude: parseFloat(latitude), longitude: parseFloat(longitude) }),
+			...(latitude !== undefined &&
+				longitude !== undefined &&
+				latitude !== "" &&
+				longitude !== "" && {
+					latitude: parseFloat(latitude),
+					longitude: parseFloat(longitude)
+				}),
 			...(photos && photos.length > 0 && { photos }),
 			user: req.user._id,
 			statusHistory: [{ status: "open", changedBy: req.user._id }]

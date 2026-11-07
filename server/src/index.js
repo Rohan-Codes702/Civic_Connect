@@ -16,15 +16,16 @@ const app = express();
 // 1. CORS CONFIGURATION
 // ========================================
 
-const configuredOrigins = [
-  ...(process.env.CLIENT_URL || "")
-    .split(",")
-    .map((origin) => origin.trim().replace(/\/+$/, ""))
-    .filter(Boolean)
-];
-const allowedOrigins = configuredOrigins.length > 0
-  ? configuredOrigins
-  : ["http://localhost:5173"];
+const normalizeOrigin = (origin) => origin.trim().replace(/\/+$/, "");
+const configuredOrigins = (process.env.CLIENT_URL || "")
+  .split(",")
+  .map(normalizeOrigin)
+  .filter(Boolean);
+const allowedOrigins = [
+  "https://civic-connect-1-8ieg.onrender.com",
+  "http://localhost:5173",
+  ...configuredOrigins
+].filter((origin, index, origins) => origins.indexOf(origin) === index);
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -33,7 +34,7 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    const normalizedOrigin = origin.replace(/\/+$/, "");
+    const normalizedOrigin = normalizeOrigin(origin);
 
     if (allowedOrigins.includes(normalizedOrigin)) {
       return callback(null, true);

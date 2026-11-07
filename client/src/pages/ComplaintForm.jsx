@@ -120,8 +120,8 @@ export default function ComplaintForm() {
         description: form.description,
         category: form.category,
         location: form.location,
-        ...(form.latitude &&
-          form.longitude && {
+        ...(form.latitude !== "" &&
+          form.longitude !== "" && {
             latitude: parseFloat(form.latitude),
             longitude: parseFloat(form.longitude)
           }),
