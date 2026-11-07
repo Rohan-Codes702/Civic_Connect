@@ -29,11 +29,6 @@ export default function MyComplaints() {
     fetchData();
   };
 
-  const handleStatus = async (id, status) => {
-    const { data: updated } = await api.put(`/complaints/${id}`, { status });
-    setData((prev) => ({ ...prev, items: prev.items.map((c) => (c._id === id ? updated : c)) }));
-  };
-
   const addComment = async (id) => {
     const text = commentDrafts[id]?.trim();
     if (!text) return;
@@ -83,7 +78,7 @@ export default function MyComplaints() {
             <option value="title">Title A-Z</option>
             <option value="-title">Title Z-A</option>
           </select>
-          <button className="btn btn-primary btn-sm w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105 transition-transform">Apply</button>
+          <button type="button" onClick={fetchData} className="btn btn-primary btn-sm w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105 transition-transform">Apply</button>
         </div>
 
         {/* Complaints */}
@@ -97,6 +92,16 @@ export default function MyComplaints() {
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-indigo-700">{c.title}</h3>
                   <p className="text-gray-600 mt-2">{c.description}</p>
+                  {c.category && <p className="text-sm text-gray-500 mt-1">Category: {c.category}</p>}
+                  {Array.isArray(c.photos) && c.photos.length > 0 && (
+                    <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {c.photos.map((p, idx) => (
+                        <a key={idx} href={p.url || p.path} target="_blank" rel="noreferrer">
+                          <img src={p.url || p.path} alt={`photo-${idx + 1}`} className="w-full h-24 object-cover rounded-lg border" />
+                        </a>
+                      ))}
+                    </div>
+                  )}
                   <p className="mt-2">
                     Status:{" "}
                     <span
@@ -113,15 +118,6 @@ export default function MyComplaints() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <select
-                    className="select select-bordered select-sm"
-                    value={c.status}
-                    onChange={(e) => handleStatus(c._id, e.target.value)}
-                  >
-                    <option value="open">Open</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="resolved">Resolved</option>
-                  </select>
                   <button className="btn btn-error btn-sm hover:scale-105 transition-transform" onClick={() => handleDelete(c._id)}>Delete</button>
                 </div>
               </div>

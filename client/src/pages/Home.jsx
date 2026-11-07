@@ -3,9 +3,11 @@ import Features from "./Features.jsx";
 import Dashboard from "./Dashboard.jsx";
 import ReportIssue from "./ReportIssue.jsx";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Home() {
 	const navigate = useNavigate();
+	const { isAuthenticated } = useAuth();
 
 	return (
 		<div className="bg-gradient-to-b from-white-100 via-white to-white-100 min-h-screen">
@@ -49,7 +51,7 @@ export default function Home() {
 
 			
 			<Features />
-			<Dashboard />
+			{isAuthenticated && <Dashboard />}
 			<ReportIssue />
 		</div>
 	);

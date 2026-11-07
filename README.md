@@ -63,7 +63,8 @@ this variable because Vite embeds it at build time.
 - Environment variables:
   - `MONGO_URI=mongodb+srv://USERNAME:PASSWORD@CLUSTER_URL/CivicConnect`
   - `JWT_SECRET=<long-random-secret>`
-  - `CLIENT_URL=https://<your-frontend>.onrender.com`
+  - `CLIENT_URL=https://civic-connect-1-8ieg.onrender.com,http://localhost:5173`
+  - Node version: 18 or newer
 
 In the Render dashboard, set **Root Directory** to `server`. Do not use the
 repository root for this service.

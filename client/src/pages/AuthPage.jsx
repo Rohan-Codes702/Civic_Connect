@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 export default function AuthPage() {
 	const [isRegister, setIsRegister] = useState(false);
 	const [form, setForm] = useState({ name: "", email: "", password: "" });
+	const [error, setError] = useState("");
 	const { login, register } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -12,12 +13,13 @@ export default function AuthPage() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		setError("");
 		try {
 			if (isRegister) await register(form.name, form.email, form.password);
 			else await login(form.email, form.password);
 			navigate(from, { replace: true });
 		} catch (err) {
-			alert("Authentication failed");
+			setError(err.response?.data?.message || "Authentication failed");
 		}
 	};
 
@@ -63,10 +65,12 @@ export default function AuthPage() {
 						className="input input-bordered w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200"
 						type="password"
 						placeholder="Password"
+						minLength={6}
 						value={form.password}
 						onChange={(e) => setForm({ ...form, password: e.target.value })}
 						required
 					/>
+					{error && <p className="text-red-600 text-sm">{error}</p>}
 					<button className="btn w-full bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300">
 						{isRegister ? "Create Account" : "Login"}
 					</button>

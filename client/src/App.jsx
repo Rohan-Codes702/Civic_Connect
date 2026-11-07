@@ -39,7 +39,7 @@ export default function App() {
 					<Route
 						path="/report"
 						element={
-							<ProtectedRoute	>
+							<ProtectedRoute>
 								<ComplaintForm />
 							</ProtectedRoute>
 						}

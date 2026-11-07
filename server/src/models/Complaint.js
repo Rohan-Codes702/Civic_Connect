@@ -33,5 +33,8 @@ const complaintSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
+complaintSchema.index({ user: 1, createdAt: -1 });
+complaintSchema.index({ status: 1, createdAt: -1 });
+
 const Complaint = mongoose.model("Complaint", complaintSchema);
 export default Complaint;

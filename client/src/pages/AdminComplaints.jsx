@@ -13,6 +13,7 @@ export default function AdminComplaints() {
     page: 1,
     limit: 10,
   });
+  const [noteDrafts, setNoteDrafts] = useState({});
 
   const fetchData = async () => {
     setLoading(true);
@@ -33,6 +34,18 @@ export default function AdminComplaints() {
   useEffect(() => {
     fetchData();
   }, [filters.page, filters.sort]);
+
+  const addNote = async (id) => {
+    const text = noteDrafts[id]?.trim();
+    if (!text) return;
+    try {
+      await api.post(`/complaints/${id}/comments`, { text });
+      setNoteDrafts((d) => ({ ...d, [id]: "" }));
+      fetchData();
+    } catch (err) {
+      alert("Failed to add note");
+    }
+  };
 
   const updateStatus = async (id, status) => {
     try {
@@ -206,6 +219,30 @@ export default function AdminComplaints() {
                 </div>
               </div>
             )}
+
+            <div className="mt-4">
+              <div className="text-gray-700 font-medium mb-2">Admin notes</div>
+              <div className="space-y-1 max-h-32 overflow-y-auto">
+                {(c.comments || []).slice(-3).map((cm) => (
+                  <div key={cm._id} className="text-sm text-gray-700">• {cm.text}</div>
+                ))}
+              </div>
+              <div className="flex gap-2 mt-2">
+                <input
+                  className="input input-bordered input-sm flex-1"
+                  placeholder="Add an administrative note"
+                  value={noteDrafts[c._id] || ""}
+                  onChange={(e) => setNoteDrafts((d) => ({ ...d, [c._id]: e.target.value }))}
+                />
+                <button
+                  type="button"
+                  className="btn btn-sm bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={() => addNote(c._id)}
+                >
+                  Add
+                </button>
+              </div>
+            </div>
           </div>
         ))}
       </div>

@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 
 export const connectDB = async (mongoUri) => {
 	try {
+		mongoose.set("strictQuery", true);
 		await mongoose.connect(mongoUri, {
-			// Mongoose 7+ uses new URL parser and unified topology by default
+			serverSelectionTimeoutMS: 10000
 		});
 		console.log("MongoDB connected");
 	} catch (error) {
