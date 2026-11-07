@@ -16,14 +16,15 @@ const app = express();
 // 1. CORS CONFIGURATION
 // ========================================
 
-const allowedOrigins = [
-  "https://civic-connect-1-8ieg.onrender.com",
-  "http://localhost:5173",
+const configuredOrigins = [
   ...(process.env.CLIENT_URL || "")
     .split(",")
     .map((origin) => origin.trim().replace(/\/+$/, ""))
     .filter(Boolean)
 ];
+const allowedOrigins = configuredOrigins.length > 0
+  ? configuredOrigins
+  : ["http://localhost:5173"];
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -69,6 +70,7 @@ const corsOptions = {
 // ========================================
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(express.json({ limit: "50mb" }));
 

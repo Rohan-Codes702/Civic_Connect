@@ -51,6 +51,9 @@ the root directories and commands below, or create both services from
 
 In the Render dashboard, set **Root Directory** to `client`. Do not use the
 repository root for this service.
+The client also normalizes a backend URL without `/api`, but setting the full
+`/api` URL explicitly is recommended. Redeploy the static site after changing
+this variable because Vite embeds it at build time.
 
 ### Render backend (Web Service)
 
